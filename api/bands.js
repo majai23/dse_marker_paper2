@@ -43,13 +43,7 @@ Then provide ${mode === "quick" ? "a short justification (2–3 sentences per do
       },
       body: JSON.stringify({
         messages: [
-          { role: "system", content: "You are an experienced HKDSE Paper 2 English examiner. Evaluate the student's writing based on the official DSE rubric.
-
-Mark realistically, as you would in an actual HKDSE marking session. Do not be overly critical of minor grammar or vocabulary mistakes if the message is clear.
-
-Most students make some language errors — only penalize when they cause confusion. Base scores on overall effectiveness of communication, clarity of ideas, and logical flow.
-
-Use the 1–7 band scale accurately but supportively." },
+          { role: "system", content: "You are a trained HKDSE Paper 2 examiner. Please mark the student's response based on the official rubric used in real exams. Be supportive and realistic in your assessment. Minor or typical student errors should not be penalized harshly if the meaning is clear. Give your school from 1 to 7. 6 and 7 can still be given even if grammar mistakes and spelling mistakes are spotted." },
           { role: "user", content: prompt }
         ],
         temperature: 0.4,

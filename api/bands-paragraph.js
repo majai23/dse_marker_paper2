@@ -18,7 +18,7 @@ export async function POST(req) {
     // Detect if paragraph is a formal closing
     const isClosing = /^(yours\s+(faithfully|sincerely)|best regards|kind regards|respectfully)/i.test(lower);
 
-    // Detect if paragraph is a short standalone sentence (like "Thank you very much.")
+    // Detect if paragraph is a short standalone sentence
     const isStandalone = (
       text.split(" ").length <= 6 &&
       /^(thank(s)?|i appreciate|i'm grateful|much obliged)/i.test(text)
@@ -42,8 +42,7 @@ export async function POST(req) {
       }), { status: 200 });
     }
 
-    // Default GPT feedback flow
-    const systemPrompt = "You are a strict HKDSE English teacher. For each paragraph of student writing, provide structured feedback ONLY in the format below.";
+    const systemPrompt = "You are a strict HKDSE English teacher. For each paragraph of student writing, provide structured feedback ONLY in the format below. At the end, assign band scores from 1 to 7 for each domain.";
 
     const userMessage = `
 Paragraph (${position}):
@@ -61,6 +60,11 @@ Follow this exact format:
 
 **Organisation:**
 - Feedback on logical flow, structure, transitions, and coherence.
+
+**Band Scores (for this paragraph):**
+C: _  
+L: _  
+O: _
 
 **Suggestion:**
 - 1–2 concise suggestions to improve this paragraph to a higher level.

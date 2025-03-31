@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   const { paragraph, level = "5**" } = req.body;
 
@@ -54,7 +53,7 @@ ${paragraph}
 
     const data = await response.json();
     const rewritten = data.choices?.[0]?.message?.content?.trim();
-    res.status(200).json({ writing: rewritten || "⚠️ No content returned." }); // PATCHED
+    res.status(200).json({ rewritten: rewritten || "⚠️ No content returned." });
   } catch (err) {
     console.error("Rewrite error:", err);
     res.status(500).json({ error: "Server error while rewriting." });

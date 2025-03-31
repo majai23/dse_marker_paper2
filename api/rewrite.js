@@ -1,3 +1,4 @@
+
 export default async function handler(req, res) {
   const { paragraph, level = "5**" } = req.body;
 
@@ -11,8 +12,6 @@ You are an HKDSE English Paper 2 rewriting coach.
 Rewrite ONLY the following paragraph to a strong Level ${level} standard.
 
 Improve clarity, tone, word choice, sentence structure, and logical flow.
-
-If needed, add suitable examples, from historic precedents to real-life examples.
 
 Then, explain the changes made in 2–5 bullet points, showing what was improved and why.
 
@@ -55,7 +54,7 @@ ${paragraph}
 
     const data = await response.json();
     const rewritten = data.choices?.[0]?.message?.content?.trim();
-    res.status(200).json({ rewritten: rewritten || "⚠️ No content returned." });
+    res.status(200).json({ writing: rewritten || "⚠️ No content returned." }); // PATCHED
   } catch (err) {
     console.error("Rewrite error:", err);
     res.status(500).json({ error: "Server error while rewriting." });

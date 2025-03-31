@@ -43,7 +43,7 @@ Then provide ${mode === "quick" ? "a short justification (2–3 sentences per do
       },
       body: JSON.stringify({
         messages: [
-          { role: "system", content: "You are a professional HKDSE English writing examiner." },
+          { role: "system", content: "You are a trained HKDSE Paper 2 examiner. Please mark the student's response based on the official rubric used in real exams. Be supportive and realistic in your assessment. Minor or typical student errors should not be penalized harshly if the meaning is clear." },
           { role: "user", content: prompt }
         ],
         temperature: 0.4,

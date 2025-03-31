@@ -57,10 +57,10 @@
     const writing = document.getElementById("studentWriting").value;
     const mode = document.getElementById("feedbackMode").value;
     const feedbackEl = document.getElementById("feedback");
-    const judgementEl = document.getElementById("judgement");
+    
 
     feedbackEl.innerText = "🔄 Generating feedback...";
-    judgementEl.innerText = "";
+    
 
     if (mode === "quick") {
       try {
@@ -108,7 +108,7 @@
       return;
     }
     const feedbackEl = document.getElementById("feedback");
-    const judgementEl = document.getElementById("judgement");
+    
 
     if (!cachedInsights.length) {
       feedbackEl.innerText = "⚠️ No paragraph analysis cached. Please run detailed analysis first.";
@@ -129,8 +129,7 @@
 const bandRegex = /C:\s*(\d)[^\d]+L:\s*(\d)[^\d]+O:\s*(\d)/gi;
 const matches = [...data.bandAnalysis.matchAll(bandRegex)];
 if (matches.length === 0) {
-  judgementEl.innerText = "⚠️ Could not extract band scores for final judgement.";
-  return;
+    return;
 }
 
 let totalC = 0, totalL = 0, totalO = 0;
@@ -160,22 +159,19 @@ else if (avg >= 2.5) level = "Level 3";
 else if (avg >= 1.5) level = "Level 2";
 else level = "Level 1";
 
-judgementEl.innerText = "🏁 Final Judgement based on averages: " + level;
 
       const bands = match ? [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] : [];
 
       if (bands.length === 3) {
-        judgementEl.innerText = "🔄 Final evaluation...";
-        const res2 = await fetch("/api/judgement", {
+                const res2 = await fetch("/api/judgement", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ writing: document.getElementById("studentWriting").value, bands })
         });
         const data2 = await res2.json();
-        judgementEl.innerText = data2.judgement || "⚠️ No judgement returned.";
+        
       } else {
-        judgementEl.innerText = "⚠️ Could not extract band scores for final judgement.";
-      }
+              }
     } catch (err) {
       feedbackEl.innerText += "❌ Error summarizing feedback.";
     }
@@ -242,4 +238,3 @@ async function analyse() {
 }
 </script></body>
 </html>
-

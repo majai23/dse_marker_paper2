@@ -1,75 +1,60 @@
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export const runtime = "edge";
+// /api/bands-summarize.js
+export const runtime = 'edge';
 
 export async function POST(req) {
-  const { question, insights } = await req.json();
+  try {
+    const { paragraphFeedback = "" } = await req.json();
 
-  if (!insights || !Array.isArray(insights) || insights.length === 0) {
-    return new Response("⚠️ Not enough detailed paragraph evaluations for scoring.", { status: 400 });
-  }
+    if (!paragraphFeedback.trim()) {
+      return new Response(JSON.stringify({ error: "No paragraph feedback provided." }), { status: 400 });
+    }
 
-  let compiledInsights = insights
-    .filter(p => typeof p === "string" && p.trim() !== "")
-    .map((p, idx) => `Paragraph ${idx + 1} Feedback:
-${p}`)
-    .join("\n\n");
+    // Extract all paragraph-level band scores
+    const regex = /C:\s*(\d)[^\d]+L:\s*(\d)[^\d]+O:\s*(\d)/gi;
+    const matches = [...paragraphFeedback.matchAll(regex)];
 
-  const prompt = `
-You are an HKDSE English Paper 2 expert marker.
+    if (matches.length === 0) {
+      return new Response(JSON.stringify({
+        bandAnalysis: "⚠️ No band scores detected in the paragraph feedback."
+      }), { status: 200 });
+    }
 
-A student has written a response to the following question:
-"${question}"
+    let totalC = 0, totalL = 0, totalO = 0;
+    matches.forEach(m => {
+      totalC += parseInt(m[1]);
+      totalL += parseInt(m[2]);
+      totalO += parseInt(m[3]);
+    });
 
-Below is the paragraph-by-paragraph analysis of the student's writing:
-${compiledInsights}
+    const avgC = totalC / matches.length;
+    const avgL = totalL / matches.length;
+    const avgO = totalO / matches.length;
+    const overallAvg = (avgC + avgL + avgO) / 3;
 
-Based on the analysis above, assign band scores for the following three domains according to HKDSE standards:
+    let level = "";
+    if (overallAvg >= 6.5) level = "Level 5**";
+    else if (overallAvg >= 5.5) level = "Level 5*";
+    else if (overallAvg >= 4.5) level = "Level 5";
+    else if (overallAvg >= 3.5) level = "Level 4";
+    else if (overallAvg >= 2.5) level = "Level 3";
+    else if (overallAvg >= 1.5) level = "Level 2";
+    else level = "Level 1";
 
-Content (C)  
-Language (L)  
-Organisation (O)
+    const result = `
+🧠 Summarizing band scores from paragraph feedback...
 
-Then provide a brief justification for each score, referring to the paragraph insights above when possible. Finally, conclude with an overall comment and 2–3 practical suggestions for improvement.
+**Averages across all paragraphs:**
+C: ${avgC.toFixed(1)}
+L: ${avgL.toFixed(1)}
+O: ${avgO.toFixed(1)}
 
-Format your response exactly like this:
-
-🧠 Summarizing band scores...
-**Band Scores:**  
-C: 6  
-L: 6  
-O: 6  
-
-**Justification:**  
-...
-
-**Suggestions for Improvement:**  
-1.  
-2.  
-3.
+🎯 Final Average: ${(overallAvg).toFixed(1)}
+🎓 Predicted DSE Level: ${level}
 `;
 
-  const result = await openai.chat.completions.create({
-    model: "gpt-4",
-    stream: false,
-    messages: [
-      {
-        role: "system",
-        content: "You are a strict but fair HKDSE English writing examiner.",
-      },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  });
+    return new Response(JSON.stringify({ bandAnalysis: result.trim() }), { status: 200 });
 
-  const summary = result.choices[0]?.message?.content || "⚠️ No summary returned.";
-  return new Response(JSON.stringify({ bandAnalysis: summary }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
 }

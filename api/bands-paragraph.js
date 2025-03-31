@@ -42,7 +42,7 @@ export async function POST(req) {
       }), { status: 200 });
     }
 
-    const systemPrompt = "You are a strict HKDSE English teacher. For each paragraph of student writing, provide structured feedback ONLY in the format below. At the end, assign band scores from 1 to 7 for each domain.";
+    const systemPrompt = "You are a trained HKDSE Paper 2 examiner. Mark fairly and realistically according to the official rubrics. Minor student errors are acceptable if communication is clear. Don't be overly harsh. For each paragraph of student writing, provide structured feedback ONLY in the format below. At the end, assign band scores from 1 to 7 for each domain.";
 
     const userMessage = `
 Paragraph (${position}):

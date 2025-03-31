@@ -18,8 +18,11 @@ export async function POST(req) {
     // Detect if paragraph is a formal closing
     const isClosing = /^(yours\s+(faithfully|sincerely)|best regards|kind regards|respectfully)/i.test(lower);
 
-    // Detect if paragraph is just a standalone sentence without elaboration
-    const isStandalone = text.split(" ").length < 12 && !text.includes(".") && !text.includes("?") && !text.includes("!");
+    // Detect if paragraph is a short standalone sentence (like "Thank you very much.")
+    const isStandalone = (
+      text.split(" ").length <= 6 &&
+      /^(thank(s)?|i appreciate|i'm grateful|much obliged)/i.test(text)
+    );
 
     if (isSalutation) {
       return new Response(JSON.stringify({
@@ -35,7 +38,7 @@ export async function POST(req) {
 
     if (isStandalone) {
       return new Response(JSON.stringify({
-        paragraphAnalysis: `### Feedback on the Paragraph:\nThis appears to be a standalone sentence. It may be too brief for full analysis. Consider whether it connects clearly with the paragraph before and after.`
+        paragraphAnalysis: `### Feedback on the Paragraph:\nThis appears to be a standalone sentence expressing appreciation. While polite, it is too brief for detailed analysis. Consider combining it with nearby content or elaborating further.`
       }), { status: 200 });
     }
 

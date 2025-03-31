@@ -123,7 +123,43 @@
       const data = await res.json();
       feedbackEl.innerText += data.bandAnalysis || "⚠️ No summary returned.";
 
-      const match = data.bandAnalysis.match(/C:\s*(\d)[^\d]+L:\s*(\d)[^\d]+O:\s*(\d)/i);
+      
+const bandRegex = /C:\s*(\d)[^\d]+L:\s*(\d)[^\d]+O:\s*(\d)/gi;
+const matches = [...data.bandAnalysis.matchAll(bandRegex)];
+if (matches.length === 0) {
+  judgementEl.innerText = "⚠️ Could not extract band scores for final judgement.";
+  return;
+}
+
+let totalC = 0, totalL = 0, totalO = 0;
+matches.forEach(m => {
+  totalC += parseInt(m[1]);
+  totalL += parseInt(m[2]);
+  totalO += parseInt(m[3]);
+});
+const avgC = Math.round(totalC / matches.length);
+const avgL = Math.round(totalL / matches.length);
+const avgO = Math.round(totalO / matches.length);
+
+document.getElementById("C1").value = avgC;
+document.getElementById("C2").value = avgC;
+document.getElementById("L1").value = avgL;
+document.getElementById("L2").value = avgL;
+document.getElementById("O1").value = avgO;
+document.getElementById("O2").value = avgO;
+
+const avg = (avgC + avgL + avgO) / 3;
+let level = "";
+if (avg >= 6.5) level = "Level 5**";
+else if (avg >= 5.5) level = "Level 5*";
+else if (avg >= 4.5) level = "Level 5";
+else if (avg >= 3.5) level = "Level 4";
+else if (avg >= 2.5) level = "Level 3";
+else if (avg >= 1.5) level = "Level 2";
+else level = "Level 1";
+
+judgementEl.innerText = "🏁 Final Judgement based on averages: " + level;
+
       const bands = match ? [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] : [];
 
       if (bands.length === 3) {
@@ -204,5 +240,6 @@ async function analyse() {
 }
 </script></body>
 </html>
+
 
 

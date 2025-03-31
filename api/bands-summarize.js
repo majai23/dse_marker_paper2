@@ -36,13 +36,13 @@ Organisation (O)
 
 Then provide a brief justification for each score, referring to the paragraph insights above when possible. Finally, conclude with an overall comment and 2–3 practical suggestions for improvement.
 
-Format your response like this:
+Format your response exactly like this:
 
 🧠 Summarizing band scores...
 **Band Scores:**  
-C:  
-L:  
-O:  
+C: 6  
+L: 6  
+O: 6  
 
 **Justification:**  
 ...

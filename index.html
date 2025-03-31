@@ -100,6 +100,8 @@
   }
 
   async function summarizeBands() {
+  const feedbackText = document.getElementById("feedback").innerText;
+
     const mode = document.getElementById("feedbackMode").value;
     if (mode !== 'detailed') {
       alert("⚠️ Summarize Scores is only available after Detailed Feedback analysis.");
@@ -240,6 +242,7 @@ async function analyse() {
 }
 </script></body>
 </html>
+
 
 
 

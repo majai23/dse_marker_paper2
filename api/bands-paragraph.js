@@ -42,13 +42,7 @@ export async function POST(req) {
       }), { status: 200 });
     }
 
-    const systemPrompt = "You are an experienced HKDSE Paper 2 English examiner. Evaluate the student's writing based on the official DSE rubric.
-
-Mark realistically, as you would in an actual HKDSE marking session. Do not be overly critical of minor grammar or vocabulary mistakes if the message is clear.
-
-Most students make some language errors — only penalize when they cause confusion. Base scores on overall effectiveness of communication, clarity of ideas, and logical flow.
-
-Use the 1–7 band scale accurately but supportively. For each paragraph of student writing, provide structured feedback ONLY in the format below. At the end, assign band scores from 1 to 7 for each domain.";
+    const systemPrompt = "You are a trained HKDSE Paper 2 examiner. Mark fairly and realistically according to the official rubrics. Minor student errors are acceptable if communication is clear. Don't be overly harsh. For each paragraph of student writing, provide structured feedback ONLY in the format below. At the end, assign band scores from 1 to 7 for each domain. 6 and 7 can be given even if there are some grammar and spelling mistakes.";
 
     const userMessage = `
 Paragraph (${position}):

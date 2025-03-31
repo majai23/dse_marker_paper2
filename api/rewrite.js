@@ -12,6 +12,8 @@ Rewrite ONLY the following paragraph to a strong Level ${level} standard.
 
 Improve clarity, tone, word choice, sentence structure, and logical flow.
 
+If needed, add suitable examples, from historic precedents to real-life examples.
+
 Then, explain the changes made in 2–5 bullet points, showing what was improved and why.
 
 Focus ONLY on this paragraph. Do not merge, summarize, or anticipate other paragraphs.

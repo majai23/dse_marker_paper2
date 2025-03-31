@@ -123,7 +123,7 @@
       const data = await res.json();
       feedbackEl.innerText += data.bandAnalysis || "⚠️ No summary returned.";
 
-      const match = data.bandAnalysis.match(/Band Scores:\s*C:\s*(\d).*?L:\s*(\d).*?O:\s*(\d)/s);
+      const match = data.bandAnalysis.match(/C:\s*(\d)[^\d]+L:\s*(\d)[^\d]+O:\s*(\d)/i);
       const bands = match ? [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] : [];
 
       if (bands.length === 3) {

@@ -1,3 +1,4 @@
+// /api/bands-paragraph.js
 export const runtime = 'edge';
 
 export async function POST(req) {
@@ -8,7 +9,28 @@ export async function POST(req) {
       return new Response(JSON.stringify({ paragraphAnalysis: "⚠️ Empty paragraph." }), { status: 400 });
     }
 
-    const systemPrompt = "You are an HKDSE English teacher. Analyze the student's writing paragraph by paragraph. For each paragraph, return feedback on Content, Language, and Organisation. If it's just a greeting or closing, note that it is not applicable for full feedback.";
+    const systemPrompt = "You are a strict HKDSE English teacher. For each paragraph of student writing, provide structured feedback ONLY in the format below.";
+
+    const userMessage = `
+Paragraph (${position}):
+${paragraph.trim()}
+
+Follow this exact format:
+
+### Feedback on the Paragraph:
+
+**Content:**
+- Feedback on ideas, relevance, clarity, depth, or development.
+
+**Language:**
+- Feedback on grammar, vocabulary, tone, and sentence structure.
+
+**Organisation:**
+- Feedback on logical flow, structure, transitions, and coherence.
+
+**Suggestion:**
+- 1–2 concise suggestions to improve this paragraph to a higher level.
+`;
 
     const response = await fetch("https://dsegpt4marker.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview", {
       method: "POST",
@@ -19,7 +41,7 @@ export async function POST(req) {
       body: JSON.stringify({
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Paragraph (${position}):\n${paragraph.trim()}` }
+          { role: "user", content: userMessage }
         ],
         temperature: 0.3,
         max_tokens: 1200
